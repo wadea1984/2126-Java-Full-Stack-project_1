@@ -1,6 +1,9 @@
 package com.ticketing_reimbursement.net.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class tickets {
@@ -11,8 +14,8 @@ public class tickets {
     private Long employee_id;
     private String status;
     private String description;
-    @Lob
-    private byte[] receipt;
+
+    private String receipt;
     public tickets(){
 
     }
@@ -24,11 +27,11 @@ public class tickets {
         this.description=description;
     }
 
-    public byte[] getReceipt() {
+    public String getReceipt() {
         return receipt;
     }
 
-    public void setReceipt(byte[] receipt) {
+    public void setReceipt(String receipt) {
         this.receipt = receipt;
     }
 
@@ -70,5 +73,17 @@ public class tickets {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "tickets{" +
+                "id=" + id +
+                ", amount=" + amount +
+                ", employee_id=" + employee_id +
+                ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
+                ", receipt='" + receipt + '\'' +
+                '}';
     }
 }

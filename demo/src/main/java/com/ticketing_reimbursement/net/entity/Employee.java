@@ -1,4 +1,6 @@
 package com.ticketing_reimbursement.net.entity;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
