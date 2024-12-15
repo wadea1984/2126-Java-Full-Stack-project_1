@@ -11,7 +11,7 @@ public class tickets {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private double amount;
-    private Long employee_id;
+    private Long employeeID;
     private String status;
     private String description;
 
@@ -21,7 +21,7 @@ public class tickets {
     }
     public tickets(Long id,double amount, Long employee_id, String status,String description){
         this.id=id;
-        this.employee_id=employee_id;
+        this.employeeID=employee_id;
         this.amount=amount;
         this.status=status;
         this.description=description;
@@ -35,8 +35,8 @@ public class tickets {
         this.receipt = receipt;
     }
 
-    public Long getEmployee_id() {
-        return employee_id;
+    public Long getEmployeeID() {
+        return employeeID;
     }
 
     public String getDescription() {
@@ -55,8 +55,8 @@ public class tickets {
         this.status = status;
     }
 
-    public void setEmployee_id(Long employee_id) {
-        this.employee_id = employee_id;
+    public void setEmployeeID(Long employee_id) {
+        this.employeeID = employee_id;
     }
 
     public Long getId() {
@@ -80,7 +80,7 @@ public class tickets {
         return "tickets{" +
                 "id=" + id +
                 ", amount=" + amount +
-                ", employee_id=" + employee_id +
+                ", employee_id=" + employeeID +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
                 ", receipt='" + receipt + '\'' +
