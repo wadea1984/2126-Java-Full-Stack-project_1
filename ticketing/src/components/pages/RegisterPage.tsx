@@ -1,7 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
  import { useUserContext } from '../context/userContext';
+ import axios from 'axios';
+import useStoreUserData from '../hooks/useStoreUserData';
 
 const RegistrationPage: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -10,10 +12,12 @@ const RegistrationPage: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error1, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
 
-  const { setUsername: setGlobalUsername, setPassword: setGlobalPassword } = useUserContext();
   const navigate = useNavigate();
+  
 
   const validateInputs = () => {
     if (!firstName || !lastName || !address || !phoneNumber || !username || !password) {
@@ -29,15 +33,35 @@ const RegistrationPage: React.FC = () => {
     setError('');
     return true;
   };
+  const handleRegister=async ()=>{
+    if(!validateInputs())
+      return
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:8080/register', {
+        username: username,
+        password: password,
+        address:   address,
+        phone_number:phoneNumber,
+        first_name:firstName,
+        last_name: lastName,
+        role: "employee"
 
-  const handleRegister = () => {
-    if (!validateInputs()) {
-      return;
+      });
+      
+      if (response.status === 200) {
+        alert('Account registered');
+        navigate('/dashboard')
+      } else {
+        setError('Failed to register account');
+      }
+    } catch (err) {
+      console.error('Error registering:', err);
+      setError('An error occurred while registering');
+    } finally {
+      setLoading(false);
     }
-
     
-
-    alert('Registration successful!');
     navigate('/'); // Navigate to the login page
   };
 
@@ -45,7 +69,7 @@ const RegistrationPage: React.FC = () => {
 
     <div className='mainContainer'>
       <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
+      {error1 && <p className="error">{error1}</p>}
 
       <div className="inputGroup">
         <label>First Name</label>
@@ -110,7 +134,8 @@ const RegistrationPage: React.FC = () => {
       </div>
 
       <div className='inputContainer'>
-        <input className={'registerButton'} type="button" onClick={handleRegister} value={'Create new account'}/>
+        <input className={'registerButton'} type="button" onClick={handleRegister} value={loading ? 'Processing...' : 'Create new account'}
+          disabled={loading} />
       </div>
     </div>
   );

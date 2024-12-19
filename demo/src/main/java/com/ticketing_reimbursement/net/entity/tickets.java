@@ -16,15 +16,26 @@ public class tickets {
     private String description;
 
     private String receipt;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public tickets(){
 
     }
-    public tickets(Long id,double amount, Long employee_id, String status,String description){
+    public tickets(Long id,double amount, Long employee_id, String status,String description,String name){
         this.id=id;
         this.employeeID=employee_id;
         this.amount=amount;
         this.status=status;
         this.description=description;
+        this.name=name;
     }
 
     public String getReceipt() {
@@ -84,6 +95,7 @@ public class tickets {
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
                 ", receipt='" + receipt + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

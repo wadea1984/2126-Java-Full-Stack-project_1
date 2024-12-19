@@ -24,10 +24,18 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   // Logout function to reset all user data and navigate to the login page
   const logout = () => {
-    setUsername('');
-    setPassword('');
-    setId('');
-    navigate('/'); // Navigate to the login page
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    
+    if (confirmLogout) {
+      setUsername('');
+      setPassword('');
+      setId('');
+      alert("Logged out");
+      navigate('/'); // Navigate to the login page
+    } else {
+      // Optional: Handle the case where the user cancels the logout
+      console.log("Logout canceled");
+    }
   };
 
   return (

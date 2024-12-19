@@ -1,7 +1,6 @@
 package com.ticketing_reimbursement.net.service;
 
 
-import com.ticketing_reimbursement.net.entity.Employee;
 import com.ticketing_reimbursement.net.entity.tickets;
 import com.ticketing_reimbursement.net.repositories.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,8 @@ public class TicketsService {
 
         if(tickets1.getDescription().length()>255)
             return null;
+        if(tickets1.getAmount()<2)
+            return null;
 
 
         return ticketsRepository.save(tickets1);
@@ -34,8 +35,8 @@ public class TicketsService {
         return ticketsOptional.orElse(null);
 
     }
-    public List<tickets> showEmployeeTickets(Employee employee){
-        Optional<List<tickets>> ticketsOptional=ticketsRepository.findAllByEmployeeID(employee.getId());
+    public List<tickets> showEmployeeTickets(Long employeeID){
+        Optional<List<tickets>> ticketsOptional=ticketsRepository.findAllByEmployeeID(employeeID);
         return ticketsOptional.orElse(null);
     }
     public int UpdatedticketById(Long ticketsID, tickets tickets1){

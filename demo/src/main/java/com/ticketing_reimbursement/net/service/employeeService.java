@@ -30,10 +30,7 @@ public class employeeService {
     public Employee loginEmployee(Employee employee) {
 
         Optional<Employee> employeeOptional =employeeRepository.findByUsernameAndPassword(employee.getUsername(),employee.getPassword());
-        if(employeeOptional.isPresent()&&employee.getRole().equals("employee"))
-            return employeeOptional.get();
-        else
-            return null;
+        return employeeOptional.orElse(null);
     }
     public Employee loginManager(Employee employee) {
 
@@ -43,6 +40,7 @@ public class employeeService {
         else
             return null;
     }
+
 
 
 }

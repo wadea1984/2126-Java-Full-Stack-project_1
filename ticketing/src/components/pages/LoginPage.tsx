@@ -1,63 +1,93 @@
-
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../context/userContext';
-import useFetchData from  '../hooks/useFetchData';
-
+import useFetchData from '../hooks/useFetchData';
+import axios from 'axios';
 
 const LoginPage: React.FC = () => {
-  
-  
   const { username, password, id, setUsername, setPassword, setId, logout } = useUserContext();
-  const [usernameError, setUsernameError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  
-  const navigate = useNavigate()
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error1, setError] = useState('');
+
+  const navigate = useNavigate();
+
  
-  const { data, loading, error } = useFetchData('http://localhost:8080/Employeelogin',username,password);
- 
-  
+
   const goToDashboard = (): void => {
     navigate('Dashboard');
   };
+
   const goToRegister = (): void => {
     navigate('Register');
   };
-  
 
-  const onButtonClick = () => {
-    setUsernameError('')
-    setPasswordError('')
+  // Button click handler
+  const validateInputs = () => {
+    setUsernameError('');
+    setPasswordError('');
     
     if ('' === username) {
-      setUsernameError('Please enter your username')
-      return
+      setUsernameError('Please enter your username');
+      return false;
     }
     if ('' === password) {
-      setPasswordError('Please enter a password')
-      return
-    }
-   
-    if (!data) {
-      setUsernameError('Your username or password is incorrect');
-      return;
-    }
-    
-    setId(data.id);
-    alert(`Logged in as ${username}`);
-    
+      setPasswordError('Please enter a password');
+      return false;
 
-    goToDashboard();
+      
+    }
+    return true;
   }
+    
+    const handleTicket= async () => {
+      
+      if(!validateInputs())
+        return false;
+     
+ 
+     setLoading(true);
+     try {
+       const response = await axios.post('http://localhost:8080/Employeelogin', {
+        username:  username, 
+        password:   password,
+        address:   null,
+        phone_number:null,
+        first_name:null,
+        last_name: null,
+        role: null,
+       });
+       console.log(username+" "+password+" "+response.data.id);
+       if (response.status === 200) {
+         alert('Account Logged in');
+         setId(response.data.id);
+         navigate('/dashboard')
+       } else {
+         setError('Failed to Login');
+       }
+     } catch (err) {
+       console.error('Error logging in:', err);
+       setError('An error occurred while logging in');
+     } finally {
+       setLoading(false);
+       
+     }
+   };
+  
+
   const onButtonClick1 = () => {
     goToRegister();
-  }
-
+  };
 
   return (
     <div className={'mainContainer'}>
+      
       <div className={'titleContainer'}>
-        <div><b>Ticking Remboursement</b></div>
+      
+
+        <div><b>Ticketing Remboursement</b></div>
+        {error1 && <p className="error">{error1}</p>}
       </div>
       <br />
       <div className={'inputContainer'}>
@@ -82,14 +112,15 @@ const LoginPage: React.FC = () => {
       </div>
       <br />
       <div className={'inputContainer'}>
-        <input className={'inputButton'} type="button" onClick={onButtonClick} value={'Log in'} />
+        <input className={'inputButton'} type="button" onClick={handleTicket} value={loading ? 'Processing...' : 'Log in'}
+          disabled={loading} />
       </div>
       <div className={'inputContainer1'}>
-        <br></br>
+        <br />
         <input className={'registerButton'} type="button" onClick={onButtonClick1} value={'Create new account'} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class ticketing_reimbursementController {
     private employeeService employeeService1;
@@ -56,9 +57,9 @@ public class ticketing_reimbursementController {
             else
                 return ResponseEntity.status(400).body(null);
     }
-    @GetMapping("EmployeeTickets")
-    public ResponseEntity<List<tickets>> AllEmployeetickets(@RequestBody Employee employee){
-        List<tickets>ticketsList= ticketsService.showEmployeeTickets(employee);
+    @GetMapping("EmployeeTickets/{employeeID}")
+    public ResponseEntity<List<tickets>> AllEmployeetickets(@PathVariable Long employeeID){
+        List<tickets>ticketsList= ticketsService.showEmployeeTickets(employeeID);
         if(ticketsList!=null)
           return  ResponseEntity.ok(ticketsList);
         else
