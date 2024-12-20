@@ -3,7 +3,7 @@ package com.ticketing_reimbursement.net;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing_reimbursement.net.controller.ticketing_reimbursementController;
 import com.ticketing_reimbursement.net.entity.Employee;
-import com.ticketing_reimbursement.net.entity.tickets;
+import com.ticketing_reimbursement.net.entity.Ticket;
 import com.ticketing_reimbursement.net.service.TicketsService;
 import com.ticketing_reimbursement.net.service.employeeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,12 +43,12 @@ class UpdateTicketTest {
 
     private ObjectMapper objectMapper;
     private Employee testEmployee;
-    private tickets testTicket;
+    private Ticket testTicket;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        testTicket = new tickets();
+        testTicket = new Ticket();
         testTicket.setId(1L);
         testTicket.setAmount(100);
         testTicket.setDescription("Test description");
@@ -59,7 +59,7 @@ class UpdateTicketTest {
 
    @Test
     void testUpdateTicketSuccess() throws Exception {
-        when(ticketsService.UpdatedticketById(anyLong(), any(tickets.class))).thenReturn(1);
+       when(ticketsService.UpdatedticketById(anyLong(), any(Ticket.class))).thenReturn(1);
 
        mockMvc.perform(patch("/tickets/{ticketsId}")
                        .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ class UpdateTicketTest {
 
     @Test
     void testUpdateTicketFailure() throws Exception {
-        when(ticketsService.UpdatedticketById(anyLong(), any(tickets.class))).thenReturn(0);
+        when(ticketsService.UpdatedticketById(anyLong(), any(Ticket.class))).thenReturn(0);
 
         mockMvc.perform(patch("/tickets/{ticketsId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)

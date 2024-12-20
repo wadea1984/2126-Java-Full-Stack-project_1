@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
        }
      } catch (err) {
        console.error('Error logging in:', err);
-       setError('An error occurred while logging in');
+       setError('Wrong username or password');
      } finally {
        setLoading(false);
        

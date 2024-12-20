@@ -57,7 +57,8 @@ const RegistrationPage: React.FC = () => {
       }
     } catch (err) {
       console.error('Error registering:', err);
-      setError('An error occurred while registering');
+      setError('username already being used');
+      return
     } finally {
       setLoading(false);
     }

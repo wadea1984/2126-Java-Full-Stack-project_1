@@ -1,7 +1,7 @@
 package com.ticketing_reimbursement.net.controller;
 
 import com.ticketing_reimbursement.net.entity.Employee;
-import com.ticketing_reimbursement.net.entity.tickets;
+import com.ticketing_reimbursement.net.entity.Ticket;
 import com.ticketing_reimbursement.net.service.TicketsService;
 import com.ticketing_reimbursement.net.service.employeeService;
 import org.slf4j.Logger;
@@ -65,25 +65,25 @@ public class ticketing_reimbursementController {
     }
 
     @PostMapping("tickets")
-    public ResponseEntity<tickets> createtickets(@RequestBody tickets tickets1) {
-        logger.info("Creating new ticket: {}", tickets1);  // Log ticket creation attempt
-        tickets newticket = ticketsService.createTickets(tickets1);
+    public ResponseEntity<Ticket> createtickets(@RequestBody Ticket ticket1) {
+        logger.info("Creating new ticket: {}", ticket1);  // Log ticket creation attempt
+        Ticket newticket = ticketsService.createTickets(ticket1);
         if (newticket != null) {
             logger.info("Ticket created successfully: {}", newticket);  // Log successful ticket creation
             return ResponseEntity.ok(newticket);
         } else {
-            logger.error("Failed to create ticket: {}", tickets1);  // Log failed ticket creation
+            logger.error("Failed to create ticket: {}", ticket1);  // Log failed ticket creation
             return ResponseEntity.status(400).body(null);
         }
     }
 
     @GetMapping("EmployeeTickets/{employeeID}")
-    public ResponseEntity<List<tickets>> AllEmployeetickets(@PathVariable Long employeeID) {
+    public ResponseEntity<List<Ticket>> AllEmployeetickets(@PathVariable Long employeeID) {
         logger.info("Fetching tickets for employee ID: {}", employeeID);  // Log ticket fetch attempt
-        List<tickets> ticketsList = ticketsService.showEmployeeTickets(employeeID);
-        if (ticketsList != null) {
-            logger.info("Fetched {} tickets for employee ID: {}", ticketsList.size(), employeeID);  // Log successful ticket fetch
-            return ResponseEntity.ok(ticketsList);
+        List<Ticket> ticketList = ticketsService.showEmployeeTickets(employeeID);
+        if (ticketList != null) {
+            logger.info("Fetched {} tickets for employee ID: {}", ticketList.size(), employeeID);  // Log successful ticket fetch
+            return ResponseEntity.ok(ticketList);
         } else {
             logger.warn("No tickets found for employee ID: {}", employeeID);  // Log no tickets found
             return ResponseEntity.status(400).body(null);
@@ -91,12 +91,12 @@ public class ticketing_reimbursementController {
     }
 
     @GetMapping("PendingTickets")
-    public ResponseEntity<List<tickets>> ShowAllPending() {
+    public ResponseEntity<List<Ticket>> ShowAllPending() {
         logger.info("Fetching all pending tickets");  // Log pending tickets fetch attempt
-        List<tickets> ticketsList = ticketsService.showPendingTickets();
-        if (ticketsList != null) {
-            logger.info("Fetched {} pending tickets", ticketsList.size());  // Log successful pending tickets fetch
-            return ResponseEntity.ok(ticketsList);
+        List<Ticket> ticketList = ticketsService.showPendingTickets();
+        if (ticketList != null) {
+            logger.info("Fetched {} pending tickets", ticketList.size());  // Log successful pending tickets fetch
+            return ResponseEntity.ok(ticketList);
         } else {
             logger.warn("No pending tickets found");  // Log no pending tickets found
             return ResponseEntity.status(400).body(null);
@@ -104,10 +104,10 @@ public class ticketing_reimbursementController {
     }
 
     @PatchMapping("tickets/{ticketsId}")
-    public ResponseEntity<Integer> UpdateTickets(@PathVariable Integer ticketsId, @RequestBody tickets tickets1) {
+    public ResponseEntity<Integer> UpdateTickets(@PathVariable Integer ticketsId, @RequestBody Ticket ticket1) {
         logger.info("Attempting to update ticket with ID: {}", ticketsId);  // Log ticket update attempt
         Long i = Long.valueOf(ticketsId);
-        int confirmation = ticketsService.UpdatedticketById(i, tickets1);
+        int confirmation = ticketsService.UpdatedticketById(i, ticket1);
         if (confirmation == 1) {
             logger.info("Ticket ID: {} updated successfully", ticketsId);  // Log successful ticket update
             return ResponseEntity.ok(confirmation);

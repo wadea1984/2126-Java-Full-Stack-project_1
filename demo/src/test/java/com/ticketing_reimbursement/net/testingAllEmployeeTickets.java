@@ -3,7 +3,7 @@ package com.ticketing_reimbursement.net;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing_reimbursement.net.controller.ticketing_reimbursementController;
 import com.ticketing_reimbursement.net.entity.Employee;
-import com.ticketing_reimbursement.net.entity.tickets;
+import com.ticketing_reimbursement.net.entity.Ticket;
 import com.ticketing_reimbursement.net.service.TicketsService;
 import com.ticketing_reimbursement.net.service.employeeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,18 +46,18 @@ public class testingAllEmployeeTickets {
 
     private ObjectMapper objectMapper;
     private Employee testEmployee;
-    private tickets testTicket;
+    private Ticket testTicket;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
         testEmployee = new Employee();
-        testTicket=new tickets();
+        testTicket=new Ticket();
     }
 
     @Test
     void testAllEmployeeTicketsSuccess() throws Exception {
-        List<tickets> ticketList = List.of(testTicket);
+        List<Ticket> ticketList = List.of(testTicket);
         when(ticketsService.showEmployeeTickets(anyLong())).thenReturn(ticketList);
 
         mockMvc.perform(get("/EmployeeTickets/{employeeID}", 1L))

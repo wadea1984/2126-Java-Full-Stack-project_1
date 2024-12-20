@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class tickets {
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +37,11 @@ public class tickets {
         this.name = name;
     }
 
-    public tickets(){
+    public Ticket(){
 
     }
-    public tickets(Long id,double amount, Long employee_id, String status,
-                   String description,String name,LocalDate date){
+    public Ticket(Long id, double amount, Long employee_id, String status,
+                  String description, String name, LocalDate date){
         this.id=id;
         this.employeeID=employee_id;
         this.amount=amount;

@@ -3,7 +3,7 @@ package com.ticketing_reimbursement.net;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing_reimbursement.net.controller.ticketing_reimbursementController;
 import com.ticketing_reimbursement.net.entity.Employee;
-import com.ticketing_reimbursement.net.entity.tickets;
+import com.ticketing_reimbursement.net.entity.Ticket;
 import com.ticketing_reimbursement.net.service.TicketsService;
 import com.ticketing_reimbursement.net.service.employeeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,13 +40,13 @@ class TicketingReimbursementApplicationTests {
 
     private ObjectMapper objectMapper;
     private Employee testEmployee;
-    private tickets testTicket;
+    private Ticket testTicket;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
         testEmployee = new Employee();
-        testEmployee.setId(1L);  // Example: Set required fields
+        testEmployee.setId(1L);
         testEmployee.setUsername("username");
         testEmployee.setPassword("password");
     }
