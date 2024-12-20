@@ -1,5 +1,7 @@
 package com.ticketing_reimbursement.net;
 
+
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing_reimbursement.net.controller.ticketing_reimbursementController;
 import com.ticketing_reimbursement.net.entity.Employee;
@@ -24,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ticketing_reimbursementController.class)
 @ExtendWith(MockitoExtension.class)
-class TicketingReimbursementApplicationTests {
+class LoginTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,10 +54,10 @@ class TicketingReimbursementApplicationTests {
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(testEmployee);
-        System.out.println(objectMapper.writeValueAsString(testEmployee));
-        mockMvc.perform(post("/register")
+    void testEmployeeLoginSuccess() throws Exception {
+        when(employeeService1.loginEmployee(testEmployee)).thenReturn(testEmployee);
+
+        mockMvc.perform(post("/Employeelogin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testEmployee)))
                 .andExpect(status().isOk())
@@ -63,13 +65,14 @@ class TicketingReimbursementApplicationTests {
     }
 
     @Test
-    void testRegisterFailure() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(null);
+    void testEmployeeLoginFailure() throws Exception {
+        when(employeeService1.loginEmployee(testEmployee)).thenReturn(null);
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/Employeelogin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testEmployee)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isUnauthorized());
     }
+
 
 }

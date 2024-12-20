@@ -17,14 +17,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @WebMvcTest(ticketing_reimbursementController.class)
 @ExtendWith(MockitoExtension.class)
-class TicketingReimbursementApplicationTests {
+class UpdateTicketTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,31 +48,34 @@ class TicketingReimbursementApplicationTests {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        testEmployee = new Employee();
-        testEmployee.setId(1L);  // Example: Set required fields
-        testEmployee.setUsername("username");
-        testEmployee.setPassword("password");
+        testTicket = new tickets();
+        testTicket.setId(1L);
+        testTicket.setAmount(100);
+        testTicket.setDescription("Test description");
+        testTicket.setEmployeeID(5L);
+        testTicket.setStatus("pending");
+        testTicket.setName("John Doe");
+    }
+
+   @Test
+    void testUpdateTicketSuccess() throws Exception {
+        when(ticketsService.UpdatedticketById(anyLong(), any(tickets.class))).thenReturn(1);
+
+       mockMvc.perform(patch("/tickets/{ticketsId}")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsString(testEmployee)))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.id").value(testEmployee.getId()));
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(testEmployee);
-        System.out.println(objectMapper.writeValueAsString(testEmployee));
-        mockMvc.perform(post("/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testEmployee.getId()));
-    }
+    void testUpdateTicketFailure() throws Exception {
+        when(ticketsService.UpdatedticketById(anyLong(), any(tickets.class))).thenReturn(0);
 
-    @Test
-    void testRegisterFailure() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(null);
-
-        mockMvc.perform(post("/register")
+        mockMvc.perform(patch("/tickets/{ticketsId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
-                .andExpect(status().isConflict());
+                        .content(objectMapper.writeValueAsString(testTicket)))
+                .andExpect(status().isBadRequest());
     }
 
 }

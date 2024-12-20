@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Define the type for the context value
@@ -6,6 +6,8 @@ interface UserContextType {
   username: string;
   password: string;
   id: string;
+  role: string;
+  setRole: (role: string) => void;
   setUsername: (username: string) => void;
   setPassword: (password: string) => void;
   setId: (id: string) => void;
@@ -17,10 +19,26 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 // Create the provider component
 export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [id, setId] = useState('');
+  // Load initial state from localStorage
+  const storedUsername = localStorage.getItem('username') || '';
+  const storedPassword = localStorage.getItem('password') || '';
+  const storedId = localStorage.getItem('id') || '';
+  const storedRole = localStorage.getItem('role') || '';
+
+  const [username, setUsername] = useState(storedUsername);
+  const [password, setPassword] = useState(storedPassword);
+  const [id, setId] = useState(storedId);
+  const [role, setRole] = useState(storedRole);
+
   const navigate = useNavigate();
+
+  // Update localStorage whenever any of the state values change
+  useEffect(() => {
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
+    localStorage.setItem('id', id);
+    localStorage.setItem('role', role);
+  }, [username, password, id, role]);
 
   // Logout function to reset all user data and navigate to the login page
   const logout = () => {
@@ -30,6 +48,8 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ childre
       setUsername('');
       setPassword('');
       setId('');
+      setRole('');
+      localStorage.clear(); // Clear all data from localStorage
       alert("Logged out");
       navigate('/'); // Navigate to the login page
     } else {
@@ -40,7 +60,7 @@ export const UserContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   return (
     <UserContext.Provider
-      value={{ username, password, id, setUsername, setPassword, setId, logout }}
+      value={{ username, password, id, role, setUsername, setPassword, setId, logout, setRole }}
     >
       {children}
     </UserContext.Provider>

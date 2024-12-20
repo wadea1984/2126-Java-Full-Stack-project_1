@@ -1,8 +1,8 @@
 package com.ticketing_reimbursement.net;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ticketing_reimbursement.net.controller.ticketing_reimbursementController;
-import com.ticketing_reimbursement.net.entity.Employee;
 import com.ticketing_reimbursement.net.entity.tickets;
 import com.ticketing_reimbursement.net.service.TicketsService;
 import com.ticketing_reimbursement.net.service.employeeService;
@@ -17,14 +17,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ticketing_reimbursementController.class)
 @ExtendWith(MockitoExtension.class)
-class TicketingReimbursementApplicationTests {
+class createtickettest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,37 +43,64 @@ class TicketingReimbursementApplicationTests {
     private ticketing_reimbursementController controller;
 
     private ObjectMapper objectMapper;
-    private Employee testEmployee;
+
     private tickets testTicket;
+    private tickets testTicket1;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        testEmployee = new Employee();
-        testEmployee.setId(1L);  // Example: Set required fields
-        testEmployee.setUsername("username");
-        testEmployee.setPassword("password");
+        testTicket = new tickets();
+        testTicket1=new tickets();
+        testTicket1.setId(1L);
+        testTicket1.setAmount(200);
+        testTicket1.setDescription("food");
+        testTicket1.setEmployeeID(5L);
+        testTicket1.setStatus("pending");
+        testTicket1.setName("john");
+        testTicket1.setDate(null);
+
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(testEmployee);
-        System.out.println(objectMapper.writeValueAsString(testEmployee));
-        mockMvc.perform(post("/register")
+    void testCreateTicketSuccess() throws Exception {
+        when(ticketsService.createTickets(testTicket1)).thenReturn(testTicket1);
+
+        mockMvc.perform(post("/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
+                        .content(objectMapper.writeValueAsString(testTicket1)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testEmployee.getId()));
-    }
+                .andExpect(jsonPath("$.id").value(testTicket1.getId()));}
+
+
 
     @Test
-    void testRegisterFailure() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(null);
+    void testCreateTicketFailure() throws Exception {
+        when(ticketsService.createTickets(testTicket)).thenReturn(null);
 
-        mockMvc.perform(post("/register")
+        mockMvc.perform(post("/tickets")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
-                .andExpect(status().isConflict());
+                        .content(objectMapper.writeValueAsString(testTicket)))
+                .andExpect(status().isBadRequest());
     }
+
+
+
+
+    @Test
+    void testAllEmployeeTicketsSuccess() throws Exception {
+        List<tickets> ticketList = List.of(testTicket);
+        when(ticketsService.showEmployeeTickets(anyLong())).thenReturn(ticketList);
+
+        mockMvc.perform(get("/EmployeeTickets/{employeeID}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(testTicket.getId()));
+    }
+
+
+
+
 
 }
+
+

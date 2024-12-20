@@ -44,12 +44,14 @@ const CreateTicket: React.FC = () => {
         description: description,
         employeeID: id,
         status: status,
-        receipt: null
+        receipt: null,
+        date: new Date()
+
 
       });
       
       if (response.status === 200) {
-        alert('Account Created!');
+        alert('Ticket Created!');
         navigate('/dashboard')
       } else {
         setError('Failed to create ticket');

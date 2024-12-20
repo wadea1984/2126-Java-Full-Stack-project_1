@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
+
 @Entity
 public class tickets {
     @Id
@@ -17,6 +19,15 @@ public class tickets {
 
     private String receipt;
     private String name;
+    private LocalDate date;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public String getName() {
         return name;
@@ -29,13 +40,15 @@ public class tickets {
     public tickets(){
 
     }
-    public tickets(Long id,double amount, Long employee_id, String status,String description,String name){
+    public tickets(Long id,double amount, Long employee_id, String status,
+                   String description,String name,LocalDate date){
         this.id=id;
         this.employeeID=employee_id;
         this.amount=amount;
         this.status=status;
         this.description=description;
         this.name=name;
+        this.date=date;
     }
 
     public String getReceipt() {
@@ -96,6 +109,7 @@ public class tickets {
                 ", description='" + description + '\'' +
                 ", receipt='" + receipt + '\'' +
                 ", name='" + name + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
 }

@@ -5,7 +5,7 @@ import useFetchData from '../hooks/useFetchData';
 import axios from 'axios';
 
 const LoginPage: React.FC = () => {
-  const { username, password, id, setUsername, setPassword, setId, logout } = useUserContext();
+  const { username, password, id,role, setUsername, setPassword, setId,setRole } = useUserContext();
   const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -62,7 +62,12 @@ const LoginPage: React.FC = () => {
        if (response.status === 200) {
          alert('Account Logged in');
          setId(response.data.id);
-         navigate('/dashboard')
+         setRole(response.data.role);
+          navigate('/dashboard')
+          
+
+  
+                
        } else {
          setError('Failed to Login');
        }
@@ -86,7 +91,7 @@ const LoginPage: React.FC = () => {
       <div className={'titleContainer'}>
       
 
-        <div><b>Ticketing Remboursement</b></div>
+        <div><b>Ticket Reimbursement</b></div>
         {error1 && <p className="error">{error1}</p>}
       </div>
       <br />
@@ -117,7 +122,7 @@ const LoginPage: React.FC = () => {
       </div>
       <div className={'inputContainer1'}>
         <br />
-        <input className={'registerButton'} type="button" onClick={onButtonClick1} value={'Create new account'} />
+        <input className={'registerButton'} type="button" onClick={onButtonClick1} value={'Register'} />
       </div>
     </div>
   );

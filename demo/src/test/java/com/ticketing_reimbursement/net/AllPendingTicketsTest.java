@@ -14,17 +14,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ticketing_reimbursementController.class)
 @ExtendWith(MockitoExtension.class)
-class TicketingReimbursementApplicationTests {
+public class AllPendingTicketsTest {
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,30 +48,26 @@ class TicketingReimbursementApplicationTests {
     void setUp() {
         objectMapper = new ObjectMapper();
         testEmployee = new Employee();
-        testEmployee.setId(1L);  // Example: Set required fields
-        testEmployee.setUsername("username");
-        testEmployee.setPassword("password");
+        testTicket=new tickets();
     }
 
     @Test
-    void testRegisterSuccess() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(testEmployee);
-        System.out.println(objectMapper.writeValueAsString(testEmployee));
-        mockMvc.perform(post("/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
+    void testShowAllPendingTicketsSuccess() throws Exception {
+        List<tickets> ticketList = List.of(testTicket);
+        when(ticketsService.showPendingTickets()).thenReturn(ticketList);
+
+        mockMvc.perform(get("/PendingTickets"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(testEmployee.getId()));
+                .andExpect(jsonPath("$[0].id").value(testTicket.getId()));
     }
 
     @Test
-    void testRegisterFailure() throws Exception {
-        when(employeeService1.registerAccount(testEmployee)).thenReturn(null);
+    void testShowAllPendingTicketsFailure() throws Exception {
+        when(ticketsService.showPendingTickets()).thenReturn(null);
 
-        mockMvc.perform(post("/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testEmployee)))
-                .andExpect(status().isConflict());
+        mockMvc.perform(get("/PendingTickets"))
+                .andExpect(status().isBadRequest());
     }
+
 
 }

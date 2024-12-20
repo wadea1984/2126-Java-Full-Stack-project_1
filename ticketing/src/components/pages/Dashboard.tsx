@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Dashboard() {
-  const { username, password, id, setUsername, setPassword, setId, logout } = useUserContext();
+  const { username, password, id, setUsername, setPassword, setId, logout,role } = useUserContext();
   const navigate = useNavigate();
 
- 
+  const goToProcessTickets = (): void => {
+    navigate('/TicketManager');
+  };
 
   const goToViewTickets= (): void => {
     navigate('/viewTickets');
@@ -17,20 +19,41 @@ function Dashboard() {
     navigate('/createTicket');
   };
   return (
-    (
-      <div className="mainContainer">
+    <div className="mainContainer">
       <div className="titleContainer">
-        <div><b>Welcome to the Dashboard {id}  {username} {password}</b></div>
+        <b>
+          {role === 'manager'
+            ? `Welcome to the Manager Dashboard, ${username}`
+            : `Welcome to the Dashboard, ${username}`}
+        </b>
       </div>
-    
+
       <div className="buttonContainer">
-        <input className="button" type="button" value="Create a Ticket" onClick={goToCreateTickets}/>
-        <input className="button" type="button" value="View Tickets"onClick={goToViewTickets} />
+        {role === 'manager' ? (
+          <input
+            className="button"
+            type="button"
+            value="Process Tickets"
+            onClick={goToProcessTickets}
+          />
+        ) : (
+          <>
+            <input
+              className="button"
+              type="button"
+              value="Create a Ticket"
+              onClick={goToCreateTickets}
+            />
+            <input
+              className="button"
+              type="button"
+              value="View Tickets"
+              onClick={goToViewTickets}
+            />
+          </>
+        )}
       </div>
     </div>
-    
-  ))
-  
+  );
 }
-
-export default Dashboard
+export default Dashboard;
